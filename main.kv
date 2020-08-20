@@ -1,0 +1,287 @@
+#:import utils kivy.utils
+#:import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+
+<CallerBox@BoxLayout>:
+    canvas:
+        Color:
+            rgba: 0,0,1,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+<Mybox@BoxLayout>:
+    canvas:
+        Color:
+            rgba: 1,1,1,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<Rbox@BoxLayout>:
+    canvas:
+        Color:
+            rgba: 1,1,1,1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [25, 0, 0, 0]
+
+
+# <Mycall@Button>:
+<MainWin>:
+    MDBackdrop:
+        header_text: 'Call Menu'
+        background_color: 0,0,1,1
+        radius: (0, 0)
+        MDBackdropBackLayer:
+            radius: (0, 0)
+            Rbox:
+                radius: (0, 0)
+                orientation: "vertical"
+                BoxLayout:
+                    size_hint_y: .05
+                    # MDIconButton:
+                    #     icon: 'signal'
+                    Label:
+                        text: ""
+                        id: balances
+                        size_hint_x: .7
+                        color: 0,0,0,1
+
+                BoxLayout:
+                    size_hint_y: .95
+                    MDTabs:
+                        tab_indicator_anim: True
+                        tab_bar_height: '30dp'
+                        background_color: 0,0,1,1
+                        text_color_normal: 1,1,1,1
+                        text_color_active: 1,1,1,1
+                        color_indicator: 1,1,1,1
+                        Tab:
+                            text: "swap-horizontal"
+                            BoxLayout:
+                                ScrollView:
+                                    MDList:
+                                        id: recents
+                                        color: 0,0,0,1
+                        Tab:
+                            text: "account-circle"
+                            BoxLayout:
+                                orientation: "vertical"
+                                ScrollView:
+                                    MDList:
+                                        id: contact
+                                        # Mycall:
+                                        #     id: log_call
+                                        #     text: ""
+                                        #     secondary_text: ""
+                                        #     on_release: root.start_call()
+                                        #     on_press:
+                                        #         screen_manager.current = 'active'
+                                        #     IconLeftWidget:
+                                        #         icon: "account"
+
+        MDBackdropFrontLayer:
+            ScreenManager:
+                id: screen_manager
+                transition: RiseInTransition()
+                background_color: 1,1,1,1
+                Screen:
+                    name: "home"
+                    Mybox:
+                        id: container
+                        orientation: "vertical"
+                        BoxLayout:
+                            id: headers
+                            size_hint_y: .1
+                            md_bg_color: (0,0,1,1)
+                            MDIconButton:
+                                icon: "chat-outline"
+                                pos_hint: {'center_X': .1, 'center_y': .5}
+                                on_release:
+                                    screen_manager.current = 'message'
+                            Label:
+                                size_hint_x: .6
+                            MDIconButton:
+                                icon: "dots-vertical"
+                                pos_hint: {'center_X': .8, 'center_y': .5}
+                        BoxLayout:
+                            orientation: "vertical"
+                            # size_hint_y: .8
+                            id: body
+                            BoxLayout:
+                                orientation: 'vertical'
+                                BoxLayout:
+                                    size_hint_y: .2
+                                    Label:
+                                        text: ''
+                                        size_hint_x: .3
+                                        shorten: True
+                                        max_lines: 1
+                                    MDLabel:
+                                        id: display_n
+                                        text: ''
+                                        font_size: 20
+                                        bold: False
+                                        multiline: False
+                                    MDIconButton:
+                                        id: backspace
+                                        icon: "arrow-left"
+                                        pos_hint: {'center_x': .8, 'center_y': .5}
+                                        on_release: root.delete()
+                                MDSeparator:
+                                MDGridLayout:
+                                    adaptive_height: False
+                                    md_bg_color: 1,1,1,1
+                                    cols: 3
+                                    id: content
+                                    padding: 10
+
+                            MDFloatingActionButton:
+                                icon: 'phone'
+                                pos_hint: {'center_x': .5, 'center_y': .1}
+                                md_bg_color: 0,1,0,1
+                                specific_text_color: 0,0,0,1
+                                on_release: root.start_call()
+                                on_press:
+                                    screen_manager.current = 'active'
+
+                        MDLabel:
+                            text: ''
+                            size_hint_y: .05
+                Screen:
+                    name: 'active'
+                    CallerBox:
+                        orientation: 'vertical'
+                        Image:
+                            source: 'imgs/profile2.png'
+                            size_hint_y: .3
+                        BoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: .2
+                            MDLabel:
+                                id: call_status
+                                text:"Calling"
+                                halign: 'center'
+                                theme_text_color: 'Custom'
+                                text_color: 1,1,1,1
+                            MDLabel:
+                                id: call_id
+                                text:''
+                                font_size: 25
+                                bold: True
+                                halign: 'center'
+                                theme_text_color: 'Custom'
+                                text_color: 1,1,1,1
+                        BoxLayout:
+                            id: bts
+                            size_hint_y: .5
+                            # padding: 10
+                            ImageButton:
+                                source: 'icons/sp.png'
+                                on_release:
+                                    source: 'icons/spg.png'
+                            ImageButton:
+                                source: 'icons/mt.png'
+                            ImageButton:
+                                source: 'icons/dl.png'
+                            ImageButton:
+                                source: 'icons/mc.png'
+                                on_release:
+                                    icon: 'icons/mcg.png'
+                        MDFloatingActionButton:
+                            icon: 'phone'
+                            pos_hint: {'center_x': .5, 'center_y': .1}
+                            md_bg_color: 1,0,0,1
+                            specific_text_color: 0,0,0,1
+                            # on_press: root.end_call()
+                            on_release: root.ids.display_n.text = ""
+                            on_release: root.ids.call_id.text = ""
+                            on_release:
+                                screen_manager.current = 'home'
+                                print("call ended")
+
+                        MDLabel:
+                            size_hint_y: .1
+                Screen:
+                    name: 'message'
+                    BoxLayout:
+                        orientation: "vertical"
+                        BoxLayout:
+                            id: more
+                            size_hint_y: .1
+                            md_bg_color: 1,0,0,1
+                            MDIconButton:
+                                icon: 'home'
+                                md_bg_color: 1,1,1,1
+                                on_press: root.ids.new_msg.text = ""
+                                on_release:
+                                    screen_manager.current = 'home'
+                            Label:
+                                size_hint_x: .5
+                            MDIconButton:
+                                icon: 'inbox-arrow-down'
+                                md_bg_color: 1,1,1,1
+                                on_release:
+                                    screen_manager.current = 'message_log'
+                        MDSeparator:
+                        BoxLayout:
+                            size_hint_y: .9
+                            orientation: 'vertical'
+                            padding: 5
+                            Label:
+                                text: 'TO: '
+                                size_hint_y: .05
+                                color: 0,0,0,1
+                            MDTextField:
+                                id: p_no
+                                size_hint_y: .15
+                                input_filter: "int"
+                                keyboard_suggestions: True
+                                focus: True
+                                color_mode: "custom"
+                                line_color_focus: 0,0,0,1
+                                line_color_normal: 0,0,0,1
+                                halign: 'center'
+                                on_text_validate: root.ids.new_msg.focus=True
+                            MDTextField:
+                                id: new_msg
+                                size_hint_y: .3
+                                keyboard_suggestions: True
+                                hint_text: "New Message"
+                                text_size: 17
+                                text_color: 0,0,0,1
+                                multiline: True
+                                padding: 10
+                                color_mode: "custom"
+                                line_color_focus: 0,0,0,1
+                                line_color_normal: 0,0,0,1
+                            BoxLayout:
+                                orientation: "vertical"
+                                size_hint_y: .2
+                                Label:
+                                    id: status
+                                    text: ""
+                                    color: 1,0,0,1
+                                    mackup: True
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                            BoxLayout:
+                                orientation: 'vertical'
+                                size_hint_y: .15
+                                MDFloatingActionButton:
+                                    icon: "send"
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    md_bg_color: 0,0,1,1
+                                    specific_text_color: 1,1,1,1
+                                    on_release: root.clear_fields()
+                                    on_press: root.msg_status()
+                                    on_release: root.delete_status()
+                                    on_release: root.send_msg()
+                            Label:
+                                size_hint_y: .15
+                Screen:
+                    name: 'message_log'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        ScrollView:
+                            MDList:
+                                id: inbox
